@@ -1,0 +1,25 @@
+{
+    "vmSettings": {
+        "master": {
+            "vmName": "k3s-master",
+            "cpuCores": 4,
+            "ram": "8G",
+            "disk": "40G",
+            "vmIp": "192.168.1.210"
+        },
+        "client": {
+            "vmName": "k3s-client",
+            "cpuCores": 1,
+            "ram": "2G",
+            "disk": "10G",
+            "vmIp": "192.168.1.251"
+        },
+        "worker": {
+            "defaultCpuCores": 2,
+            "defaultRam": "4G",
+            "defaultDisk": "10G"
+        }
+    },
+    "k3sVersion": "v1.27.8+k3s2",
+    "timeoutSeconds": 60
+}

@@ -1,0 +1,16 @@
+# K3s Master
+192.168.1.210    k3s-master
+
+# K3s Clients
+192.168.1.251    k3s-client
+
+# Workers
+192.168.1.211    worker1
+192.168.1.212    worker2
+192.168.1.213    worker3
+192.168.1.214    worker4
+192.168.1.215    worker5
+192.168.1.216    worker6
+192.168.1.217    worker7
+192.168.1.218    worker8
+192.168.1.219    worker9

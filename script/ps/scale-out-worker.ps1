@@ -1,7 +1,7 @@
 # PowerShell script to scale out k3s cluster with worker nodes
 
 # Import necessary modules
-Import-Module .\modules\MultipassUtils.psm1
+Import-Module .\modules\MultipassUtils.psm1  -Force
 Import-Module .\modules\LoggingUtils.psm1
 Import-Module .\modules\K3sUtils.psm1
 

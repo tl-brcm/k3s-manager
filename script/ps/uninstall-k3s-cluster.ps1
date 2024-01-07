@@ -40,11 +40,11 @@ if ($LASTEXITCODE -ne 0) {
 
 
 # Delete Client VM
-Write-Log "Deleting VM $clientVmName..."
-& multipass delete $clientVmName
-& multipass purge
-if ($LASTEXITCODE -ne 0) {
-    Write-Log "Failed to delete VM $clientVmName"
-}
+# Write-Log "Deleting VM $clientVmName..."
+# & multipass delete $clientVmName
+# & multipass purge
+# if ($LASTEXITCODE -ne 0) {
+#     Write-Log "Failed to delete VM $clientVmName"
+# }
 
 Write-Log "Uninstallation and deletion of k3s-master and k3s-client completed successfully."

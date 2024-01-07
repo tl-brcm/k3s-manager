@@ -26,6 +26,7 @@ $localTempPath = ".\temp\"
 $localScriptPath = "..\sh\install_kubectx_kubens.sh"
 $remoteTempPath = "/home/ubuntu/"
 $hostListPath = Join-Path $scriptBaseDir "..\config\host_list"
+$sshPubKeyPath = "$env:USERPROFILE\.ssh\id_rsa.pub"
 
 # Use functions from the module
 Test-VMExistence -vmName $vmName
@@ -38,5 +39,8 @@ Copy-K3sConfig -masterVmName $masterVmName -clientVmName $vmName -k3sConfigFile 
 Install-Helm -vmName $vmName
 Update-Bashrc -vmName $vmName
 Copy-InstallScript -vmName $vmName -localScriptPath $localScriptPath
+
+# Append SSH public key to the VM's authorized_keys file
+Copy-SSHKey -vmName $vmName -sshPubKeyPath $sshPubKeyPath
 
 Write-Log "$vmName VM setup completed successfully"

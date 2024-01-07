@@ -120,13 +120,22 @@ install_k3s_worker() {
     local k3s_node_ip=$3
 
     write_log "Installing K3s on worker node $vm_name..."
-    local install_cmd="curl -sfL https://get.k3s.io | K3S_URL=https://k3s-master:6443 K3S_TOKEN=${k3s_token} INSTALL_K3S_VERSION='v1.27.8+k3s2' K3S_NODE_IP='$k3s_node_ip' sh -s - --node-ip $k3s_node_ip"
-    multipass exec "$vm_name" -- bash -c "${install_cmd}"
-    echo $install_cmd
-    if [ $? -ne 0 ]; then
-        write_log "Failed to install K3s on worker node $vm_name"
-        exit $?
-    fi
+    # Create a temp script file
+    temp_script="temp/install_k3s_$vm_name.sh"
+    
+    printf '#!/bin/bash\n' > "$temp_script"
+    printf "curl -sfL https://get.k3s.io | K3S_URL=https://k3s-master:6443 K3S_TOKEN=$k3s_token INSTALL_K3S_VERSION='v1.27.8+k3s2' K3S_NODE_IP='$k3s_node_ip' sh -s - --node-ip $k3s_node_ip" >> "$temp_script"
+    printf '\n' >> "$temp_script"
+
+    multipass transfer "$temp_script" "$vm_name:/home/ubuntu/install_k3s.sh"
+    # Execute the script
+    multipass exec "$vm_name" -- chmod +x /home/ubuntu/install_k3s.sh    
+    sleep 20
+    write_log "Wait for 20 secs for the VM to get ready..."
+    multipass exec "$vm_name" -- bash -c "/home/ubuntu/install_k3s.sh"
+
+    # Remove the local temp script file
+    rm "$temp_script"
 }
 
 # Function to Get K3s Token from Master

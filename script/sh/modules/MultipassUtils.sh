@@ -16,7 +16,7 @@ start_vm() {
     local ram=$3
     local disk=$4
     write_log "Launching $vm_name VM..."
-    multipass launch -n "$vm_name" -c "$cpu_cores" -m "$ram" -d "$disk" --network name=br0,mode=manual
+    multipass launch -n "$vm_name" -c "$cpu_cores" -m "$ram" -d "$disk" --network name=br0,mode=manual --cloud-init ../../config/user-data.yaml
 }
 
 # Function to Set Network Configuration

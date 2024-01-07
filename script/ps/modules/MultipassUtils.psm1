@@ -1,4 +1,4 @@
-Import-Module modules\LoggingUtils.psm1
+Import-Module .\LoggingUtils.psm1
 
 function Test-VMExistence {
     param ($vmName)
@@ -12,7 +12,7 @@ function Test-VMExistence {
 function Start-VM {
     param ($vmName, $cpuCores, $ram, $disk)
     Write-Log "Launching $vmName VM..."
-    & multipass launch -n $vmName -c $cpuCores -m $ram -d $disk --network name=br0,mode=manual --cloud-init ../../config/user-data.yaml
+    & multipass launch -n $vmName -c $cpuCores -m $ram -d $disk --network name=br0,mode=manual
     if ($LASTEXITCODE -ne 0) {
         Write-Log "Failed to launch $vmName VM"
         exit $LASTEXITCODE

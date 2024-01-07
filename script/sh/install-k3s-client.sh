@@ -61,6 +61,9 @@ set_network_configuration "$vmName" "$vmIp"
 write_log "Applying network settings for $vmName..." "INFO"
 invoke_network_settings_application "$vmName" "$timeoutSeconds"
 
+write_log "Wait for 20 secs for host to be initialized..." "INFO"
+sleep 20
+
 # Add Host List
 write_log "Adding host list to $vmName..." "INFO"
 add_host_list "$vmName" "$hostListPath"

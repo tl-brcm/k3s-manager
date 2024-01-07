@@ -13,6 +13,7 @@ copy_k3s_config() {
     local is_use_scp=${6:-false}
 
     write_log "Transferring k3s configuration..."
+    ssh-keygen -f "/home/tony/.ssh/known_hosts" -R "$master_vm_name"
 
     [[ ! -d $local_temp_path ]] && mkdir -p $local_temp_path
 
@@ -49,6 +50,7 @@ copy_k3s_config_as_slave() {
     if [[ ! -d $local_temp_path ]]; then
         mkdir -p $local_temp_path
     fi
+
 
     multipass exec "$master_vm_name" -- sudo bash -c "cp /etc/rancher/k3s/k3s.yaml $remote_temp_path$k3s_config_file && chmod 644 $remote_temp_path$k3s_config_file"
     

@@ -1,5 +1,5 @@
 # PowerShell script to launch and configure k3s-master in Multipass
-Import-Module .\modules\MultipassUtils.psm1
+Import-Module .\modules\MultipassUtils.psm1 -Force
 Import-Module .\modules\LoggingUtils.psm1
 
 # Load configuration from JSON file

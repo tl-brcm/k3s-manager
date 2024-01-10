@@ -100,7 +100,9 @@ function Copy-SSHKey {
 function Install-K3s {
     param ($vmName, $k3sVersion, $vmIp)
     Write-Log "Installing K3s on $vmName..."
-    & multipass exec $vmName -- bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION='$k3sVersion' K3S_NODE_IP='$vmIp' sh -s - --disable=traefik --node-ip $vmIp"
+    & multipass exec -n $vmName -- sudo apt-get update
+    & multipass exec -n $vmName -- sudo sudo apt install -y wireguard
+    & multipass exec $vmName -- bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION='$k3sVersion' sh -s - --disable=traefik --node-external-ip=$vmIp --flannel-backend=wireguard-native --flannel-external-ip"
     if ($LASTEXITCODE -ne 0) {
         Write-Log "Failed to install K3s on $vmName"
         exit $LASTEXITCODE

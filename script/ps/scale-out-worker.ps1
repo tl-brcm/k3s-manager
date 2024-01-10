@@ -3,7 +3,7 @@
 # Import necessary modules
 Import-Module .\modules\MultipassUtils.psm1  -Force
 Import-Module .\modules\LoggingUtils.psm1
-Import-Module .\modules\K3sUtils.psm1
+Import-Module .\modules\K3sUtils.psm1  -Force
 
 # Load configuration from JSON file
 $configPath = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) "..\..\config\config.json"

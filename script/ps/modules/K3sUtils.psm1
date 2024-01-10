@@ -81,6 +81,22 @@ source <(helm completion bash)
 complete -o default -F __start_helm h
 alias ks=kubens
 alias kx=kubectx
+
+#kubectx and kubens
+export PATH=~/.kubectx:$PATH
+# we need to source the path here. 
+. ~/.kubectx/completion/kubens.bash
+. ~/.kubectx/completion/kubectx.bash
+
+complete -F _kube_namespaces ks
+complete -F _kube_contexts kx
+
+alias kp='kubectl get pods'
+alias ka='kubectl get all'
+alias kpa='kubectl get pods --all-namespaces'
+alias kpaw='kubectl get pods --all-namespaces'
+alias knw='kubectl get nodes -o wide'
+
 "@
     & multipass exec -n $vmName -- bash -c "echo '$bashrcContent' >> ~/.bashrc"
     if ($LASTEXITCODE -ne 0) {
@@ -111,7 +127,9 @@ function Copy-InstallScript {
 function Install-K3sWorker {
     param ($vmName, $k3sToken, $k3sNodeIp)
     Write-Log "Installing K3s on worker node $vmName..."
-    $installCmd = "curl -sfL https://get.k3s.io | K3S_URL=https://k3s-master:6443 K3S_TOKEN=$k3sToken INSTALL_K3S_VERSION='v1.27.8+k3s2' K3S_NODE_IP='$k3sNodeIp' sh -s - --node-ip $k3sNodeIp"
+    & multipass exec -n $vmName -- sudo apt-get update
+    & multipass exec -n $vmName -- sudo sudo apt install -y wireguard
+    $installCmd = "curl -sfL https://get.k3s.io | K3S_URL=https://k3s-master:6443 K3S_TOKEN=$k3sToken INSTALL_K3S_VERSION='v1.27.8+k3s2' sh -s - --node-external-ip $k3sNodeIp"
     & multipass exec $vmName -- bash -c $installCmd
     if ($LASTEXITCODE -ne 0) {
         Write-Log "Failed to install K3s on worker node $vmName"

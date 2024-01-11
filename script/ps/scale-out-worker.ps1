@@ -1,24 +1,43 @@
 # PowerShell script to scale out k3s cluster with worker nodes
 
 # Import necessary modules
-Import-Module .\modules\MultipassUtils.psm1  -Force
-Import-Module .\modules\LoggingUtils.psm1
-Import-Module .\modules\K3sUtils.psm1  -Force
+$scriptBaseDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$modulesDir = Join-Path $scriptBaseDir "modules"  # Specify the correct path to your modules directory
+Import-Module (Join-Path $modulesDir "MultipassUtils.psm1") -Force
+Import-Module (Join-Path $modulesDir "K3sUtils.psm1") -Force
+Import-Module (Join-Path $modulesDir "LoggingUtils.psm1") -Force
+
+# Get the script name without extension
+$scriptName = [System.IO.Path]::GetFileNameWithoutExtension($MyInvocation.MyCommand.Path)
+
+# Function to print usage
+function Print-Usage {
+    Write-Host "Usage: $scriptName <number_of_workers>"
+    Write-Host "Example: $scriptName 3"
+}
+
+# # Check if the correct number of arguments are provided
+# if ($args.Count -ne 1) {
+#     Print-Usage
+#     exit 1
+# }
+
+# Retrieve the current prefix from the file
+$currentPrefixPath = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) "..\..\config\current_prefix"
+$workerBaseName = Get-Content -Path $currentPrefixPath
+
+# Paths to host list and config.json based on the current prefix
+$hostListPath = Join-Path (Join-Path (Join-Path -Path $scriptBaseDir -ChildPath "..\..\config\slaves") $workerBaseName) "host_list"
+$configPath = Join-Path (Join-Path (Join-Path -Path $scriptBaseDir -ChildPath "..\..\config\slaves") $workerBaseName) "config.json"
 
 # Load configuration from JSON file
-$configPath = Join-Path (Split-Path -Parent $MyInvocation.MyCommand.Definition) "..\..\config\config.json"
 $configJson = Get-Content $configPath | ConvertFrom-Json
-$scriptBaseDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-
-# Extract Worker Node Settings from the config
 $workerSettings = $configJson.vmSettings.worker
 $defaultCpuCores = $workerSettings.defaultCpuCores
 $defaultRam = $workerSettings.defaultRam
 $defaultDisk = $workerSettings.defaultDisk
-$workerBaseName = "worker"
 $workerStartIndex = 1
 $timeoutSeconds = $configJson.timeoutSeconds
-$hostListPath = Join-Path $scriptBaseDir "..\..\config\host_list"
 $workerCount = $args[0] -as [int]
 if (-not $workerCount -or $workerCount -le 0) { $workerCount = 1 }
 
@@ -27,9 +46,9 @@ $k3sToken = Get-K3sToken -masterVmName "k3s-master"
 
 # Scaling Out Worker Nodes
 for ($i = $workerStartIndex; $i -lt ($workerStartIndex + $workerCount); $i++) {
-    $workerName = "$workerBaseName$i"
+    $workerName = "$workerBaseName-worker$i"
 
-    # If in 'NotReady' state, remove from cluster and try to remove VM, then continue to create new one
+    # If in 'NotReady' state, remove from cluster and try to remove VM, then continue to create a new one
     $nodeStatus = Get-ClusterNodeStatus-And-Remove-NotReady -nodeName $workerName
     if ($nodeStatus -eq "Ready") {
         continue

@@ -17,7 +17,7 @@
         "worker": {
             "defaultCpuCores": 2,
             "defaultRam": "4G",
-            "defaultDisk": "10G"
+            "defaultDisk": "30G"
         }
     },
     "k3sVersion": "v1.27.8+k3s2",

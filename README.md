@@ -74,3 +74,4 @@ Example `config.json`:
     "k3sVersion": "v1.27.8+k3s2",
     "timeoutSeconds": 60
 }
+```

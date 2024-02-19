@@ -66,7 +66,7 @@ install_k3s() {
     local k3s_version=$2
     local vm_ip=$3
     write_log "Installing K3s on $vm_name..."
-    multipass exec "$vm_name" -- bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION='$k3s_version' K3S_NODE_IP='$vm_ip' sh -s - --disable=traefik --node-ip $vm_ip"
+    multipass exec "$vm_name" -- bash -c "curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION='$k3s_version' K3S_NODE_IP='$vm_ip' sh -s - --disable=traefik --node-external-ip=$vm_ip --flannel-backend=wireguard-native --flannel-external-ip"
 }
 
 # Function to Add Host List

@@ -6,6 +6,7 @@ source ./modules/LoggingUtils.sh
 source ./modules/K3sUtils.sh
 
 scriptBaseDir=$(dirname "$(realpath "$0")")
+use_scp=true
 
 # Read the prefix from the current_prefix file
 current_prefix_path="$scriptBaseDir/../../config/current_prefix"
@@ -40,7 +41,7 @@ timeout_seconds=$(echo "$config_json" | jq -r '.timeoutSeconds')
 worker_count=${1:-1} # Default worker count is 1 if not provided as the first argument
 
 # Retrieve K3s Token
-k3s_token=$(get_k3s_token "k3s-master" true)
+k3s_token=$(get_k3s_token "k3s-master" $use_scp)
 
 # Find the next worker index
 worker_start_index=$(find_next_worker_index "$prefix")

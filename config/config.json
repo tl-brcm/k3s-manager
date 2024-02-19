@@ -5,7 +5,7 @@
             "cpuCores": 4,
             "ram": "8G",
             "disk": "40G",
-            "vmIp": "192.168.1.210"
+            "vmIp": "192.168.1.110"
         },
         "client": {
             "vmName": "k3s-client",

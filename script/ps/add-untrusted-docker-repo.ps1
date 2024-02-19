@@ -13,7 +13,7 @@ param (
 )
 
 $start = 1
-$end = 5
+$end = 9
 
 # The configuration to be applied
 $registriesConfig = @"
